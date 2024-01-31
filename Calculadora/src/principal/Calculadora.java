@@ -1,20 +1,39 @@
 package principal;
 
+import java.io.IOException;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import menu.Menu;
 import operaciones.Operaciones;
-
 /**
  * @author Derek 🙈
  * La clase Calculadora proporciona un programa simple que permite al usuario realizar operaciones matemáticas básicas.
  */
 public class Calculadora {
+	  private static final Logger logger = Logger.getLogger(Calculadora.class.getName());
 
-    /**
-     * El método principal que ejecuta la calculadora.
-     *
-     * @param args Los argumentos de la línea de comandos (no se utilizan en este programa).
-     */
-    public static void main(String[] args) {   
+    public static void main(String[] args) throws IOException
+    {   
+    	logger.setLevel(Level.ALL);
+    	logger.setUseParentHandlers(false);
+    	
+    	Handler consoleHandler = new ConsoleHandler();
+    	Handler fileHandler = null;
+    	consoleHandler.setLevel(Level.WARNING);
+    	
+    	logger.addHandler(consoleHandler);
+    	try {
+    		fileHandler = new FileHandler("C://Users/1AW3-22/git/Calculadora/logs/operaciones.log", true);
+    		logger.addHandler(fileHandler);
+    		fileHandler.setLevel(Level.ALL);
+    		} catch (IOException exception) {
+    		logger.log(Level.WARNING, "Error al cargar la configuración",exception);
+    		
+    	}
         int resultado = 0;
         String operacion = "";
         int[] operandos = new int[2];
