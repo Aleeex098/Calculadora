@@ -42,7 +42,7 @@ public class Calculadora {
 		Operaciones operaciones = new Operaciones();
 
 		// Abre el archivo HTML para el registro de operaciones
-		FileWriter htmlWriter = new FileWriter("C:/Users/1AW3-22/git/Calculadora/logs/resultadosCalculadora.html",
+		FileWriter htmlWriter = new FileWriter("C:/Users/1AW3-22/eclipse-workspace/Calculadora/logs/resultadosCalculadora.html",
 				true);
 		htmlWriter.write(
 				"<!DOCTYPE html><html><head><title>Resultados de la Calculadora</title><link rel=\"stylesheet\" type=\"text/css\" href=\"styles.css\"></head><body>");
