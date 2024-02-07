@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE log SYSTEM "logger.dtd">
-<log>
-</log>
+feb 07, 2024 1:51:59 P. M. principal.Calculadora main
+DETALLADO: Operación de suma: 2 + 2 = 4
+feb 07, 2024 1:52:47 P. M. principal.Calculadora main
+ADVERTENCIA: Intento de dividir por cero

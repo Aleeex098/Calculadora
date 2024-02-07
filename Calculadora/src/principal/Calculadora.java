@@ -16,26 +16,17 @@ public class Calculadora {
     public static void main(String[] args) throws IOException {
         logger.setLevel(Level.ALL);
 
-        // Manejador para la consola
+        // Configuración del manejador de la consola
         Handler consoleHandler = new ConsoleHandler();
         consoleHandler.setLevel(Level.WARNING);
         logger.addHandler(consoleHandler);
 
-        // Manejador para el archivo HTML
-        FileHandler fileHandlerHtml = null;
-        try {
-            fileHandlerHtml = new FileHandler("ResultadoCalculadora.html");
-            fileHandlerHtml.setLevel(Level.ALL);
-            logger.addHandler(fileHandlerHtml);
-        } catch (IOException exception) {
-            logger.log(Level.WARNING, "Error al cargar la configuración del archivo HTML", exception);
-        }
-
-        // Manejador para el archivo de operaciones.log
+        // Configuración del manejador de archivo para operaciones.log
         FileHandler fileHandlerLog = null;
         try {
-            fileHandlerLog = new FileHandler("C:/Users/1AW3-22/eclipse-workspace/Calculadora/logs/operaciones.log");
-            fileHandlerLog.setLevel(Level.WARNING); // Se registran solo advertencias
+            fileHandlerLog = new FileHandler("logs/operaciones.log", true); // El segundo argumento 'true' indica que se agregará al final del archivo
+            fileHandlerLog.setLevel(Level.FINE); // Cambio a Level.FINE para que se registren todas las operaciones exitosas
+            fileHandlerLog.setFormatter(new java.util.logging.SimpleFormatter());
             logger.addHandler(fileHandlerLog);
         } catch (IOException exception) {
             logger.log(Level.WARNING, "Error al cargar la configuración del archivo de operaciones", exception);
@@ -45,74 +36,59 @@ public class Calculadora {
         String operacion = "";
         int[] operandos = new int[2];
 
-        // Se crea una instancia de la clase Menu y Operaciones para realizar las
-        // operaciones.
         Menu menu = new Menu();
         Operaciones operaciones = new Operaciones();
 
-        // Abre el archivo HTML para el registro de operaciones
-        FileWriter htmlWriter = new FileWriter("C:/Users/1AW3-22/eclipse-workspace/Calculadora/logs/resultadosCalculadora.html",
-                true);
+        FileWriter htmlWriter = new FileWriter("logs/resultadosCalculadora.html", true);
         htmlWriter.write(
                 "<!DOCTYPE html><html><head><title>Resultados de la Calculadora</title><link rel=\"stylesheet\" type=\"text/css\" href=\"styles.css\"></head><body>");
 
         do {
-            // Se solicitan los números y la operación al usuario.
             operandos = menu.pedirNumeros();
             operacion = menu.menuOpciones();
 
-            // Se realiza la operación seleccionada y se muestra el resultado.
-            if (operacion.equalsIgnoreCase("+")) {
-                resultado = operaciones.sumar(operandos[0], operandos[1]);
-                System.out.println("Resultado: " + resultado);
-                logger.fine("Operación de suma: " + operandos[0] + " + " + operandos[1] + " = " + resultado);
-            } else if (operacion.equalsIgnoreCase("-")) {
-                resultado = operaciones.restar(operandos[0], operandos[1]);
-                System.out.println("Resultado: " + resultado);
-                logger.fine("Operación de resta: " + operandos[0] + " - " + operandos[1] + " = " + resultado);
-            } else if (operacion.equalsIgnoreCase("*")) {
-                resultado = operaciones.multiplicar(operandos[0], operandos[1]);
-                System.out.println("Resultado: " + resultado);
-                logger.fine("Operación de multiplicación: " + operandos[0] + " * " + operandos[1] + " = " + resultado);
-            } else if (operacion.equalsIgnoreCase("/")) {
-                resultado = operaciones.dividir(operandos[0], operandos[1]);
-                System.out.println("Resultado: " + resultado);
-                logger.fine("Operación de división: " + operandos[0] + " / " + operandos[1] + " = " + resultado);
-            } else if (operacion.equalsIgnoreCase("%")) {
-                resultado = operaciones.resto(operandos[0], operandos[1]);
-                System.out.println("Resultado: " + resultado);
-                logger.fine("Operación de módulo: " + operandos[0] + " % " + operandos[1] + " = " + resultado);
-            } else {
-                System.out.println("Operación no válida");
-            }
+            try {
+                if (operacion.equalsIgnoreCase("+")) {
+                    resultado = operaciones.sumar(operandos[0], operandos[1]);
+                    System.out.println("Resultado: " + resultado);
+                    logger.fine("Operación de suma: " + operandos[0] + " + " + operandos[1] + " = " + resultado);
+                } else if (operacion.equalsIgnoreCase("-")) {
+                    resultado = operaciones.restar(operandos[0], operandos[1]);
+                    System.out.println("Resultado: " + resultado);
+                    logger.fine("Operación de resta: " + operandos[0] + " - " + operandos[1] + " = " + resultado);
+                } else if (operacion.equalsIgnoreCase("*")) {
+                    resultado = operaciones.multiplicar(operandos[0], operandos[1]);
+                    System.out.println("Resultado: " + resultado);
+                    logger.fine("Operación de multiplicación: " + operandos[0] + " * " + operandos[1] + " = " + resultado);
+                } else if (operacion.equalsIgnoreCase("/")) {
+                    resultado = operaciones.dividir(operandos[0], operandos[1]);
+                    System.out.println("Resultado: " + resultado);
+                    logger.fine("Operación de división: " + operandos[0] + " / " + operandos[1] + " = " + resultado);
+                } else if (operacion.equalsIgnoreCase("%")) {
+                    resultado = operaciones.resto(operandos[0], operandos[1]);
+                    System.out.println("Resultado: " + resultado);
+                    logger.fine("Operación de módulo: " + operandos[0] + " % " + operandos[1] + " = " + resultado);
+                } else {
+                    System.out.println("Operación no válida");
+                }
 
-            // Registra la operación en el archivo HTML
-            htmlWriter.write("<tr>\r\n"
-                    + "				<td>"+operacion+"</td>\r\n"
-                    + "				<td>"+operandos[0]+"</td>\r\n"
-                    + "				<td>"+operandos[1]+"</td>\r\n"
-                    + "				<td>"+resultado+"</td>\r\n"
-                    + "			</tr>\r\n");
-
-            // Si el resultado es NaN, registrar advertencia en operaciones.log
-            if (Double.isNaN(resultado)) {
-                logger.warning("Intento de dividir por cero");
+                htmlWriter.write("<tr>\r\n" + "				<td>" + operacion + "</td>\r\n" + "				<td>"
+                        + operandos[0] + "</td>\r\n" + "				<td>" + operandos[1] + "</td>\r\n" + "				<td>"
+                        + resultado + "</td>\r\n" + "			</tr>\r\n");
+            } catch (ArithmeticException e) {
+                logger.warning("Operacion no Valida");
             }
 
         } while (menu.repetir());
 
-        // Cierra el archivo HTML
         htmlWriter.write("</body></html>");
         htmlWriter.close();
 
-        // Cierra el manejador del archivo HTML
-        if (fileHandlerHtml != null) {
-            fileHandlerHtml.close();
-        }
-
-        // Cierra el manejador del archivo de operaciones.log
         if (fileHandlerLog != null) {
             fileHandlerLog.close();
         }
     }
 }
+
+
+
